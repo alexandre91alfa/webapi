@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Model;
 using WebApi.Repositore;
 
@@ -19,9 +21,17 @@ namespace WebApi.Controllers
         }
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Event>> Get()
+        public async Task<IActionResult> Get()
         {
-            return _context.Events.ToList();
+            try
+            {
+                var result = await _context.Events.ToListAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
+            }
         }
 
         // GET api/values/5

@@ -28,16 +28,29 @@ namespace WebApi.Controllers
                     Lote = "1° lote",
                     QtPessoas = 2000,
                     DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")}
-            
+
         };
 
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<Event> Get(int id)
         {
-            return "value";
+            return new Event[] {
+                new Event{EventoId = 1,
+                    Tema = "Angular e dotnetCore",
+                    Local = "São Paulo",
+                    Lote = "1° lote",
+                    QtPessoas = 200,
+                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")},
+                new Event{EventoId = 2,
+                    Tema = "web dotnetCore",
+                    Local = "São Paulo",
+                    Lote = "1° lote",
+                    QtPessoas = 2000,
+                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")}}.
+                    FirstOrDefault(x => x.EventoId == id);
         }
 
         // POST api/values

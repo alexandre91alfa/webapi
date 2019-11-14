@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Model;
+using WebApi.Repositore;
 
 namespace WebApi.Controllers
 {
@@ -11,46 +14,39 @@ namespace WebApi.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly DataContext _context;
+        public ValuesController(DataContext context)
+        {
+            _context = context;
+        }
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<Event>> Get()
+        public async Task<IActionResult> Get()
         {
-            return new Event[] {
-                new Event{EventoId = 1,
-                    Tema = "Angular e dotnetCore",
-                    Local = "São Paulo",
-                    Lote = "1° lote",
-                    QtPessoas = 200,
-                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")},
-                new Event{EventoId = 2,
-                    Tema = "web dotnetCore",
-                    Local = "São Paulo",
-                    Lote = "1° lote",
-                    QtPessoas = 2000,
-                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")}
-
-        };
-
+            try
+            {
+                var result = await _context.Events.ToListAsync();
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
+            }
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<Event> Get(int id)
+        public async Task<ActionResult<Event>> Get(int id)
         {
-            return new Event[] {
-                new Event{EventoId = 1,
-                    Tema = "Angular e dotnetCore",
-                    Local = "São Paulo",
-                    Lote = "1° lote",
-                    QtPessoas = 200,
-                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")},
-                new Event{EventoId = 2,
-                    Tema = "web dotnetCore",
-                    Local = "São Paulo",
-                    Lote = "1° lote",
-                    QtPessoas = 2000,
-                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")}}.
-                    FirstOrDefault(x => x.EventoId == id);
+            try
+            {
+                var result = await _context.Events.FirstOrDefaultAsync(x => x.EventoId == id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
+            }
         }
 
         // POST api/values

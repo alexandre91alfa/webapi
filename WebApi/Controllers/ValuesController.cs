@@ -36,10 +36,17 @@ namespace WebApi.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<Event> Get(int id)
+        public async Task<ActionResult<Event>> Get(int id)
         {
-            return _context.Events.ToList().
-                    FirstOrDefault(x => x.EventoId == id);
+            try
+            {
+                var result = await _context.Events.FirstOrDefaultAsync(x => x.EventoId == id);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
+            }
         }
 
         // POST api/values

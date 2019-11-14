@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("site/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Event>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new Event[] {
+                new Event{EventoId = 1,
+                    Tema = "Angular e dotnetCore",
+                    Local = "São Paulo",
+                    Lote = "1° lote",
+                    QtPessoas = 200,
+                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")},
+                new Event{EventoId = 2,
+                    Tema = "web dotnetCore",
+                    Local = "São Paulo",
+                    Lote = "1° lote",
+                    QtPessoas = 2000,
+                    DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")}
+            
+        };
+
         }
 
         // GET api/values/5
